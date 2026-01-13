@@ -2,10 +2,7 @@ openapi: 3.0.0
 info:
   title: Green API RU Max (v3)
   version: 1.0.0
-servers:
-  - url: '{{apiUrl}}'
-  - url: '{{mediaUrl}}'
-  - url: '{{webhookUrl}}'
+
 paths:
   /waInstance{idInstance}/getStateInstance/{apiTokenInstance}:
     get:

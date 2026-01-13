@@ -1,5 +1,5 @@
 package: gen
-output: pkg/api/api.go
+output: pkg/partnerapi/partnerapi.go
 generate:
     models: true
     client: true

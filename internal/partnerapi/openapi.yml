@@ -1,0 +1,366 @@
+openapi: 3.0.0
+info:
+  title: Green API RU Max Partner API
+  version: 1.0.0
+
+servers:
+  - url: https://api.green-api.com
+    description: Партнерский API
+
+paths:
+  /partner/getInstances/{partnerToken}:
+    get:
+      summary: Получить список инстансов
+      description: |
+        Метод предназначен для получения всех инстансов на аккаунте партнера.
+
+        В случае ошибки авторизации API может вернуть HTTP 200
+        с телом ошибки (code, description).
+      operationId: getInstances
+      tags:
+        - Partners
+      parameters:
+        - name: partnerToken
+          in: path
+          required: true
+          description: Партнерский API-токен
+          schema:
+            type: string
+      responses:
+        "200":
+          description: |
+            Успешный ответ или ошибка авторизации.
+            Тип ответа определяется телом.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: "#/components/schemas/PartnerInstance"
+                  - $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                success:
+                  summary: Список инстансов
+                  value:
+                    - idInstance: 3100000000
+                      name: "Instance 3100000000"
+                      typeInstance: "v3"
+                      typeAccount: ""
+                      partnerUserUiid: ""
+                      timeCreated: "2022-06-03T18:39:44"
+                      timeDeleted: "0001-01-01T00:00:00"
+                      apiTokenInstance: "1f2485e80f474293b935f77d78c64e76fa4bdceb417a4998a4"
+                      deleted: false
+                      tariff: "PARTNER_23"
+                      isFree: false
+                      isPartner: true
+                      expirationDate: "2022-06-09T18:39:44"
+                      isExpired: false
+                unauthorized:
+                  summary: Ошибка авторизации
+                  value:
+                    code: 401
+                    description: "Unauthorized"
+        "400":
+          description: Ошибка запроса
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /partners/createInstance/{partnerToken}:
+    post:
+      summary: Создание инстанса
+      operationId: createInstance
+      parameters:
+        - name: partnerToken
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - Partners
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateInstanceRequest"
+      responses:
+        "200":
+          description: |
+            Успешный ответ или ошибка.
+            В случае ошибки HTTP статус всегда 200, тип ответа определяется телом.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/CreateInstanceSuccessResponse"
+                  - $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                success:
+                  summary: Успешное создание инстанса
+                  value:
+                    apiTokenInstance: "c1b0474542144e0ead529eb4861ca5f583c346eb00564f64a7"
+                    apiUrl: "https://3100.api.green-api.com/v3/"
+                    idInstance: 3100000000
+                    mediaUrl: "https://3100.api.green-api.com/v3/"
+                    typeInstance: "v3"
+                error:
+                  summary: Ошибка авторизации
+                  value:
+                    code: 401
+                    description: "Unauthorized"
+
+  /partner/deleteInstanceAccount/{partnerToken}:
+    post:
+      summary: Удалить инстанс
+      description: |
+        Метод предназначен для удаления инстанса на аккаунте партнера.
+        
+        В случае ошибок (Unauthorized, Not found) API возвращает HTTP 200
+        с телом ошибки (code, description).
+      operationId: deleteInstanceAccount
+      tags:
+        - Partners
+      parameters:
+        - name: partnerToken
+          in: path
+          required: true
+          description: Партнерский API-токен
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteInstanceRequest"
+            example:
+              idInstance: 3100000000
+      responses:
+        "200":
+          description: |
+            Успешный ответ или ошибка.
+            Тип ответа определяется телом.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/DeleteInstanceSuccessResponse"
+                  - $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                success:
+                  summary: Инстанс успешно удален
+                  value:
+                    deleteInstanceAccount: true
+                notFound:
+                  summary: Инстанс не найден
+                  value:
+                    code: 404
+                    description: "Not found"
+                unauthorized:
+                  summary: Ошибка авторизации
+                  value:
+                    code: 401
+                    description: "Unauthorized"
+
+components:
+  schemas:
+    PartnerInstance:
+      type: object
+      description: Инстанс партнерского аккаунта
+      required:
+        - idInstance
+        - name
+        - typeInstance
+        - timeCreated
+        - apiTokenInstance
+        - deleted
+        - tariff
+        - isFree
+        - isPartner
+        - expirationDate
+        - isExpired
+      properties:
+        idInstance:
+          type: integer
+          format: int64
+          description: |
+            Идентификатор инстанса аккаунта.
+            Значение uint64, 10 разрядов.
+          example: 3100000000
+
+        name:
+          type: string
+          description: Название инстанса
+          example: "Instance 3100000000"
+
+        typeInstance:
+          type: string
+          description: |
+            Тип инстанса:
+            v3 — мессенджер MAX
+            whatsapp — мессенджер WhatsApp
+          example: v3
+
+        typeAccount:
+          type: string
+          description: Не используется
+          example: ""
+
+        partnerUserUiid:
+          type: string
+          description: Не используется
+          example: ""
+
+        timeCreated:
+          type: string
+          format: date-time
+          description: Время создания инстанса
+          example: "2022-06-03T18:39:44"
+
+        timeDeleted:
+          type: string
+          format: date-time
+          description: Время удаления инстанса
+          example: "0001-01-01T00:00:00"
+
+        apiTokenInstance:
+          type: string
+          description: API-токен инстанса
+          example: "1f2485e80f474293b935f77d78c64e76fa4bdceb417a4998a4"
+
+        deleted:
+          type: boolean
+          description: |
+            Состояние инстанса:
+            true — удален
+            false — активен
+          example: false
+
+        tariff:
+          type: string
+          description: Подключенный тариф
+          example: "PARTNER_23"
+
+        isFree:
+          type: boolean
+          description: Признак бесплатного инстанса
+          example: false
+
+        isPartner:
+          type: boolean
+          description: Признак партнерского тарифа
+          example: true
+
+        expirationDate:
+          type: string
+          format: date-time
+          description: Дата окончания действия инстанса
+          example: "2022-06-09T18:39:44"
+
+        isExpired:
+          type: boolean
+          description: Признак истечения срока действия
+          example: false
+
+    CreateInstanceRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Название инстанса
+        webhookUrl:
+          type: string
+          format: uri
+          description: URL webhook
+        webhookUrlToken:
+          type: string
+          description: Токен для валидации webhook
+        delaySendMessagesMilliseconds:
+          type: integer
+          minimum: 0
+        markIncomingMessagesReaded:
+          type: string
+          enum: [ "yes", "no" ]
+        markIncomingMessagesReadedOnReply:
+          type: string
+          enum: [ "yes", "no" ]
+        outgoingAPIMessageWebhook:
+          type: string
+          enum: [ "yes", "no" ]
+        outgoingWebhook:
+          type: string
+          enum: [ "yes", "no" ]
+        outgoingMessageWebhook:
+          type: string
+          enum: [ "yes", "no" ]
+        incomingWebhook:
+          type: string
+          enum: [ "yes", "no" ]
+        stateWebhook:
+          type: string
+          enum: [ "yes", "no" ]
+
+    CreateInstanceSuccessResponse:
+      type: object
+      properties:
+        apiTokenInstance:
+          type: string
+          description: API токен инстанса
+        apiUrl:
+          type: string
+          format: uri
+          description: Базовый URL API
+        idInstance:
+          type: number
+          description: Идентификатор инстанса
+        mediaUrl:
+          type: string
+          format: uri
+          description: URL для работы с медиа
+        typeInstance:
+          type: string
+          description: Тип инстанса (например, v3)
+
+    DeleteInstanceRequest:
+      type: object
+      description: Запрос на удаление инстанса партнерского аккаунта
+      required:
+        - idInstance
+      properties:
+        idInstance:
+          type: integer
+          format: int64
+          description: |
+            Идентификатор инстанса аккаунта.
+            Значение типа uint64, 10 разрядов.
+          example: 3100000000
+
+    DeleteInstanceSuccessResponse:
+      type: object
+      description: Результат удаления инстанса партнерского аккаунта
+      required:
+        - deleteInstanceAccount
+      properties:
+        deleteInstanceAccount:
+          type: boolean
+          description: |
+            Флаг удаления инстанса аккаунта.
+            true — инстанс успешно удален.
+          example: true
+
+    ErrorResponse:
+      type: object
+      required:
+        - code
+        - description
+      properties:
+        code:
+          type: integer
+          description: Код ошибки
+        description:
+          type: string
+          description: Описание ошибки
