@@ -12,7 +12,7 @@ type Handler interface {
 	//
 	// Создание инстанса.
 	//
-	// POST /partners/createInstance/{partnerToken}
+	// POST /partner/createInstance/{partnerToken}
 	CreateInstance(ctx context.Context, req *CreateInstanceRequest, params CreateInstanceParams) (CreateInstanceResponse, error)
 	// DeleteInstanceAccount implements deleteInstanceAccount operation.
 	//

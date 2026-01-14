@@ -65,7 +65,7 @@ paths:
               schema:
                 type: string
 
-  /partners/createInstance/{partnerToken}:
+  /partner/createInstance/{partnerToken}:
     post:
       summary: Создание инстанса
       operationId: createInstance

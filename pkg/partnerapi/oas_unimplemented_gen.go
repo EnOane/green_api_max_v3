@@ -17,7 +17,7 @@ var _ Handler = UnimplementedHandler{}
 //
 // Создание инстанса.
 //
-// POST /partners/createInstance/{partnerToken}
+// POST /partner/createInstance/{partnerToken}
 func (UnimplementedHandler) CreateInstance(ctx context.Context, req *CreateInstanceRequest, params CreateInstanceParams) (r CreateInstanceResponse, _ error) {
 	return r, ht.ErrNotImplemented
 }

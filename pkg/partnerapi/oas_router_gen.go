@@ -49,9 +49,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 		switch elem[0] {
-		case '/': // Prefix: "/partner"
+		case '/': // Prefix: "/partner/"
 
-			if l := len("/partner"); len(elem) >= l && elem[0:l] == "/partner" {
+			if l := len("/partner/"); len(elem) >= l && elem[0:l] == "/partner/" {
 				elem = elem[l:]
 			} else {
 				break
@@ -61,85 +61,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				break
 			}
 			switch elem[0] {
-			case '/': // Prefix: "/"
+			case 'c': // Prefix: "createInstance/"
 
-				if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
-					elem = elem[l:]
-				} else {
-					break
-				}
-
-				if len(elem) == 0 {
-					break
-				}
-				switch elem[0] {
-				case 'd': // Prefix: "deleteInstanceAccount/"
-
-					if l := len("deleteInstanceAccount/"); len(elem) >= l && elem[0:l] == "deleteInstanceAccount/" {
-						elem = elem[l:]
-					} else {
-						break
-					}
-
-					// Param: "partnerToken"
-					// Leaf parameter, slashes are prohibited
-					idx := strings.IndexByte(elem, '/')
-					if idx >= 0 {
-						break
-					}
-					args[0] = elem
-					elem = ""
-
-					if len(elem) == 0 {
-						// Leaf node.
-						switch r.Method {
-						case "POST":
-							s.handleDeleteInstanceAccountRequest([1]string{
-								args[0],
-							}, elemIsEscaped, w, r)
-						default:
-							s.notAllowed(w, r, "POST")
-						}
-
-						return
-					}
-
-				case 'g': // Prefix: "getInstances/"
-
-					if l := len("getInstances/"); len(elem) >= l && elem[0:l] == "getInstances/" {
-						elem = elem[l:]
-					} else {
-						break
-					}
-
-					// Param: "partnerToken"
-					// Leaf parameter, slashes are prohibited
-					idx := strings.IndexByte(elem, '/')
-					if idx >= 0 {
-						break
-					}
-					args[0] = elem
-					elem = ""
-
-					if len(elem) == 0 {
-						// Leaf node.
-						switch r.Method {
-						case "GET":
-							s.handleGetInstancesRequest([1]string{
-								args[0],
-							}, elemIsEscaped, w, r)
-						default:
-							s.notAllowed(w, r, "GET")
-						}
-
-						return
-					}
-
-				}
-
-			case 's': // Prefix: "s/createInstance/"
-
-				if l := len("s/createInstance/"); len(elem) >= l && elem[0:l] == "s/createInstance/" {
+				if l := len("createInstance/"); len(elem) >= l && elem[0:l] == "createInstance/" {
 					elem = elem[l:]
 				} else {
 					break
@@ -163,6 +87,68 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						}, elemIsEscaped, w, r)
 					default:
 						s.notAllowed(w, r, "POST")
+					}
+
+					return
+				}
+
+			case 'd': // Prefix: "deleteInstanceAccount/"
+
+				if l := len("deleteInstanceAccount/"); len(elem) >= l && elem[0:l] == "deleteInstanceAccount/" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				// Param: "partnerToken"
+				// Leaf parameter, slashes are prohibited
+				idx := strings.IndexByte(elem, '/')
+				if idx >= 0 {
+					break
+				}
+				args[0] = elem
+				elem = ""
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch r.Method {
+					case "POST":
+						s.handleDeleteInstanceAccountRequest([1]string{
+							args[0],
+						}, elemIsEscaped, w, r)
+					default:
+						s.notAllowed(w, r, "POST")
+					}
+
+					return
+				}
+
+			case 'g': // Prefix: "getInstances/"
+
+				if l := len("getInstances/"); len(elem) >= l && elem[0:l] == "getInstances/" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				// Param: "partnerToken"
+				// Leaf parameter, slashes are prohibited
+				idx := strings.IndexByte(elem, '/')
+				if idx >= 0 {
+					break
+				}
+				args[0] = elem
+				elem = ""
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch r.Method {
+					case "GET":
+						s.handleGetInstancesRequest([1]string{
+							args[0],
+						}, elemIsEscaped, w, r)
+					default:
+						s.notAllowed(w, r, "GET")
 					}
 
 					return
@@ -256,9 +242,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 			break
 		}
 		switch elem[0] {
-		case '/': // Prefix: "/partner"
+		case '/': // Prefix: "/partner/"
 
-			if l := len("/partner"); len(elem) >= l && elem[0:l] == "/partner" {
+			if l := len("/partner/"); len(elem) >= l && elem[0:l] == "/partner/" {
 				elem = elem[l:]
 			} else {
 				break
@@ -268,91 +254,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				break
 			}
 			switch elem[0] {
-			case '/': // Prefix: "/"
+			case 'c': // Prefix: "createInstance/"
 
-				if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
-					elem = elem[l:]
-				} else {
-					break
-				}
-
-				if len(elem) == 0 {
-					break
-				}
-				switch elem[0] {
-				case 'd': // Prefix: "deleteInstanceAccount/"
-
-					if l := len("deleteInstanceAccount/"); len(elem) >= l && elem[0:l] == "deleteInstanceAccount/" {
-						elem = elem[l:]
-					} else {
-						break
-					}
-
-					// Param: "partnerToken"
-					// Leaf parameter, slashes are prohibited
-					idx := strings.IndexByte(elem, '/')
-					if idx >= 0 {
-						break
-					}
-					args[0] = elem
-					elem = ""
-
-					if len(elem) == 0 {
-						// Leaf node.
-						switch method {
-						case "POST":
-							r.name = DeleteInstanceAccountOperation
-							r.summary = "Удалить инстанс"
-							r.operationID = "deleteInstanceAccount"
-							r.operationGroup = ""
-							r.pathPattern = "/partner/deleteInstanceAccount/{partnerToken}"
-							r.args = args
-							r.count = 1
-							return r, true
-						default:
-							return
-						}
-					}
-
-				case 'g': // Prefix: "getInstances/"
-
-					if l := len("getInstances/"); len(elem) >= l && elem[0:l] == "getInstances/" {
-						elem = elem[l:]
-					} else {
-						break
-					}
-
-					// Param: "partnerToken"
-					// Leaf parameter, slashes are prohibited
-					idx := strings.IndexByte(elem, '/')
-					if idx >= 0 {
-						break
-					}
-					args[0] = elem
-					elem = ""
-
-					if len(elem) == 0 {
-						// Leaf node.
-						switch method {
-						case "GET":
-							r.name = GetInstancesOperation
-							r.summary = "Получить список инстансов"
-							r.operationID = "getInstances"
-							r.operationGroup = ""
-							r.pathPattern = "/partner/getInstances/{partnerToken}"
-							r.args = args
-							r.count = 1
-							return r, true
-						default:
-							return
-						}
-					}
-
-				}
-
-			case 's': // Prefix: "s/createInstance/"
-
-				if l := len("s/createInstance/"); len(elem) >= l && elem[0:l] == "s/createInstance/" {
+				if l := len("createInstance/"); len(elem) >= l && elem[0:l] == "createInstance/" {
 					elem = elem[l:]
 				} else {
 					break
@@ -375,7 +279,75 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						r.summary = "Создание инстанса"
 						r.operationID = "createInstance"
 						r.operationGroup = ""
-						r.pathPattern = "/partners/createInstance/{partnerToken}"
+						r.pathPattern = "/partner/createInstance/{partnerToken}"
+						r.args = args
+						r.count = 1
+						return r, true
+					default:
+						return
+					}
+				}
+
+			case 'd': // Prefix: "deleteInstanceAccount/"
+
+				if l := len("deleteInstanceAccount/"); len(elem) >= l && elem[0:l] == "deleteInstanceAccount/" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				// Param: "partnerToken"
+				// Leaf parameter, slashes are prohibited
+				idx := strings.IndexByte(elem, '/')
+				if idx >= 0 {
+					break
+				}
+				args[0] = elem
+				elem = ""
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch method {
+					case "POST":
+						r.name = DeleteInstanceAccountOperation
+						r.summary = "Удалить инстанс"
+						r.operationID = "deleteInstanceAccount"
+						r.operationGroup = ""
+						r.pathPattern = "/partner/deleteInstanceAccount/{partnerToken}"
+						r.args = args
+						r.count = 1
+						return r, true
+					default:
+						return
+					}
+				}
+
+			case 'g': // Prefix: "getInstances/"
+
+				if l := len("getInstances/"); len(elem) >= l && elem[0:l] == "getInstances/" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				// Param: "partnerToken"
+				// Leaf parameter, slashes are prohibited
+				idx := strings.IndexByte(elem, '/')
+				if idx >= 0 {
+					break
+				}
+				args[0] = elem
+				elem = ""
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch method {
+					case "GET":
+						r.name = GetInstancesOperation
+						r.summary = "Получить список инстансов"
+						r.operationID = "getInstances"
+						r.operationGroup = ""
+						r.pathPattern = "/partner/getInstances/{partnerToken}"
 						r.args = args
 						r.count = 1
 						return r, true

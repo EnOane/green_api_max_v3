@@ -31,7 +31,7 @@ type Invoker interface {
 	//
 	// Создание инстанса.
 	//
-	// POST /partners/createInstance/{partnerToken}
+	// POST /partner/createInstance/{partnerToken}
 	CreateInstance(ctx context.Context, request *CreateInstanceRequest, params CreateInstanceParams) (CreateInstanceResponse, error)
 	// DeleteInstanceAccount invokes deleteInstanceAccount operation.
 	//
@@ -100,7 +100,7 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 //
 // Создание инстанса.
 //
-// POST /partners/createInstance/{partnerToken}
+// POST /partner/createInstance/{partnerToken}
 func (c *Client) CreateInstance(ctx context.Context, request *CreateInstanceRequest, params CreateInstanceParams) (CreateInstanceResponse, error) {
 	res, err := c.sendCreateInstance(ctx, request, params)
 	return res, err
@@ -110,7 +110,7 @@ func (c *Client) sendCreateInstance(ctx context.Context, request *CreateInstance
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("createInstance"),
 		semconv.HTTPRequestMethodKey.String("POST"),
-		semconv.URLTemplateKey.String("/partners/createInstance/{partnerToken}"),
+		semconv.URLTemplateKey.String("/partner/createInstance/{partnerToken}"),
 	}
 	otelAttrs = append(otelAttrs, c.cfg.Attributes...)
 
@@ -144,7 +144,7 @@ func (c *Client) sendCreateInstance(ctx context.Context, request *CreateInstance
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
 	var pathParts [2]string
-	pathParts[0] = "/partners/createInstance/"
+	pathParts[0] = "/partner/createInstance/"
 	{
 		// Encode "partnerToken" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{

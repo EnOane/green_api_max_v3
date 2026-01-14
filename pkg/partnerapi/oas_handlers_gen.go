@@ -37,14 +37,14 @@ func (c *codeRecorder) Unwrap() http.ResponseWriter {
 //
 // Создание инстанса.
 //
-// POST /partners/createInstance/{partnerToken}
+// POST /partner/createInstance/{partnerToken}
 func (s *Server) handleCreateInstanceRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	statusWriter := &codeRecorder{ResponseWriter: w}
 	w = statusWriter
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("createInstance"),
 		semconv.HTTPRequestMethodKey.String("POST"),
-		semconv.HTTPRouteKey.String("/partners/createInstance/{partnerToken}"),
+		semconv.HTTPRouteKey.String("/partner/createInstance/{partnerToken}"),
 	}
 
 	// Start a span for this request.
