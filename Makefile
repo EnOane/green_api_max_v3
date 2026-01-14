@@ -1,20 +1,18 @@
 -include .env
 export
 
-OAPIGEN?=$(shell go env GOPATH)/bin/oapi-codegen
+OAPIGEN?=$(shell go env GOPATH)/bin/ogen
 
 OUT_DIR=pkg
 
-oapi-codegen-install:
-	go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest
+ogen-install:
+	go install -v github.com/ogen-go/ogen/cmd/ogen@latest
 
 apigen:
-	mkdir -p ${OUT_DIR}
-	${OAPIGEN} --config=internal/api/oapi-codegen-config.yaml internal/api/openapi.yml
+	${OAPIGEN} --target ./pkg/api ./internal/api/openapi.yml
 
 partnerapi-gen:
-	mkdir -p ${OUT_DIR}
-	${OAPIGEN} --config=internal/partnerapi/oapi-codegen-config.yaml internal/partnerapi/openapi.yml
+	${OAPIGEN} --target ./pkg/partnerapi ./internal/partnerapi/openapi.yml
 
 clean:
 	rm -rf $(OUT_DIR)

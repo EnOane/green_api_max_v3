@@ -34,11 +34,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - type: array
-                    items:
-                      $ref: "#/components/schemas/PartnerInstance"
-                  - $ref: "#/components/schemas/ErrorResponse"
+                $ref: "#/components/schemas/GetInstancesResponse"
               examples:
                 success:
                   summary: Список инстансов
@@ -95,9 +91,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: "#/components/schemas/CreateInstanceSuccessResponse"
-                  - $ref: "#/components/schemas/ErrorResponse"
+                $ref: "#/components/schemas/CreateInstanceResponse"
               examples:
                 success:
                   summary: Успешное создание инстанса
@@ -147,9 +141,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: "#/components/schemas/DeleteInstanceSuccessResponse"
-                  - $ref: "#/components/schemas/ErrorResponse"
+                $ref: "#/components/schemas/DeleteInstanceAccountResponse"
               examples:
                 success:
                   summary: Инстанс успешно удален
@@ -168,6 +160,16 @@ paths:
 
 components:
   schemas:
+    GetInstancesResponse:
+      description: |
+        Успешный ответ (массив инстансов) или ошибка авторизации.
+        Тип фактического ответа определяется телом.
+      oneOf:
+        - type: array
+          items:
+            $ref: "#/components/schemas/PartnerInstance"
+        - $ref: "#/components/schemas/ErrorResponse"
+
     PartnerInstance:
       type: object
       description: Инстанс партнерского аккаунта
@@ -351,6 +353,22 @@ components:
             Флаг удаления инстанса аккаунта.
             true — инстанс успешно удален.
           example: true
+
+    CreateInstanceResponse:
+      description: |
+        Успешное создание инстанса или ошибка.
+        В случае ошибки HTTP статус всегда 200, тип ответа определяется телом.
+      oneOf:
+        - $ref: "#/components/schemas/CreateInstanceSuccessResponse"
+        - $ref: "#/components/schemas/ErrorResponse"
+
+    DeleteInstanceAccountResponse:
+      description: |
+        Результат удаления инстанса или ошибка.
+        Тип фактического ответа определяется телом.
+      oneOf:
+        - $ref: "#/components/schemas/DeleteInstanceSuccessResponse"
+        - $ref: "#/components/schemas/ErrorResponse"
 
     ErrorResponse:
       type: object
